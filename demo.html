@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Service Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .demo-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 PDF Service Demo</h1>
+        
+        <!-- Demo 1: Simple HTML -->
+        <div class="demo-section">
+            <h3>📄 Demo 1: Simple HTML to PDF</h3>
+            <p>Click the button to download a simple PDF:</p>
+            <button onclick="demo1()">Generate Simple PDF</button>
+            <div id="status1" class="status"></div>
+        </div>
+
+        <!-- Demo 2: Custom HTML -->
+        <div class="demo-section">
+            <h3>✏️ Demo 2: Custom HTML</h3>
+            <p>Write your own HTML and convert it to PDF:</p>
+            <textarea id="customHtml" placeholder="Enter your HTML here...">
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .header { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        .content { margin-top: 20px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>My Custom Document</h1>
+        <p>Created on ${new Date().toLocaleDateString()}</p>
+    </div>
+    <div class="content">
+        <h2>Section 1</h2>
+        <p>This is my custom PDF content. You can include:</p>
+        <ul>
+            <li>Lists</li>
+            <li>Tables</li>
+            <li>Images</li>
+            <li>Styled text</li>
+        </ul>
+        
+        <h2>Section 2</h2>
+        <p>Add whatever content you need here!</p>
+    </div>
+</body>
+</html>
+            </textarea>
+            <button onclick="demo2()">Generate Custom PDF</button>
+            <div id="status2" class="status"></div>
+        </div>
+
+        <!-- Demo 3: Form to PDF -->
+        <div class="demo-section">
+            <h3>📋 Demo 3: Form Data to PDF</h3>
+            <p>Fill out this form and convert it to a PDF report:</p>
+            
+            <div class="form-group">
+                <label for="customerName">Customer Name:</label>
+                <input type="text" id="customerName" value="John Doe">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" value="john@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="orderDate">Order Date:</label>
+                <input type="date" id="orderDate">
+            </div>
+            
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" value="299.99" step="0.01">
+            </div>
+            
+            <button onclick="demo3()">Generate Form PDF</button>
+            <div id="status3" class="status"></div>
+        </div>
+
+        <!-- Demo 4: Business Report -->
+        <div class="demo-section">
+            <h3>📊 Demo 4: Business Report</h3>
+            <p>Generate a professional business report:</p>
+            <button onclick="demo4()">Generate Business Report</button>
+            <div id="status4" class="status"></div>
+        </div>
+    </div>
+
+    <script>
+        const PDF_SERVICE_URL = 'https://pdf-service2-hid27m3hm-avidshotzs-projects.vercel.app/api/success';
+
+        // Utility functions
+        function showStatus(elementId, message, isError = false) {
+            const statusEl = document.getElementById(elementId);
+            statusEl.textContent = message;
+            statusEl.className = `status ${isError ? 'error' : 'success'}`;
+            statusEl.style.display = 'block';
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+
+        async function generatePDF(htmlContent) {
+            const response = await fetch(PDF_SERVICE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ html: htmlContent })
+            });
+
+            if (!response.ok) {
+                throw new Error(`PDF generation failed: ${response.status}`);
+            }
+
+            return await response.blob();
+        }
+
+        async function downloadPDF(htmlContent, filename = 'document.pdf') {
+            try {
+                const pdfBlob = await generatePDF(htmlContent);
+                
+                const url = window.URL.createObjectURL(pdfBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                return true;
+            } catch (error) {
+                console.error('PDF generation failed:', error);
+                throw error;
+            }
+        }
+
+        // Demo functions
+        async function demo1() {
+            try {
+                showStatus('status1', 'Generating PDF...');
+                
+                const html = '<h1>Hello PDF World!</h1><p>This is a simple test document generated from HTML.</p><p>Generated on: ' + new Date().toLocaleString() + '</p>';
+                
+                await downloadPDF(html, 'simple-demo.pdf');
+                showStatus('status1', '✅ PDF downloaded successfully!');
+            } catch (error) {
+                showStatus('status1', '❌ Error: ' + error.message, true);
+            }
+        }
+
+        async function demo2() {
+            try {
+                showStatus('status2', 'Generating custom PDF...');
+                
+                const html = document.getElementById('customHtml').value;
+                if (!html.trim()) {
+                    throw new Error('Please enter some HTML content');
+                }
+                
+                await downloadPDF(html, 'custom-demo.pdf');
+                showStatus('status2', '✅ Custom PDF downloaded successfully!');
+            } catch (error) {
+                showStatus('status2', '❌ Error: ' + error.message, true);
+            }
+        }
+
+        async function demo3() {
+            try {
+                showStatus('status3', 'Generating form PDF...');
+                
+                const formData = {
+                    'Customer Name': document.getElementById('customerName').value,
+                    'Email': document.getElementById('email').value,
+                    'Order Date': document.getElementById('orderDate').value,
+                    'Amount': '$' + document.getElementById('amount').value
+                };
+
+                const html = `
+                <html>
+                <head>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; }
+                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #007bff; padding-bottom: 20px; }
+                        .field { margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-left: 4px solid #007bff; }
+                        .label { font-weight: bold; color: #333; }
+                        .value { margin-left: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>📋 Form Submission Report</h1>
+                        <p>Generated on ${new Date().toLocaleString()}</p>
+                    </div>
+                    ${Object.entries(formData).map(([key, value]) => `
+                        <div class="field">
+                            <span class="label">${key}:</span>
+                            <span class="value">${value}</span>
+                        </div>
+                    `).join('')}
+                    <div style="margin-top: 40px; text-align: center; color: #666;">
+                        <p>Thank you for your submission!</p>
+                    </div>
+                </body>
+                </html>
+                `;
+                
+                await downloadPDF(html, 'form-submission.pdf');
+                showStatus('status3', '✅ Form PDF downloaded successfully!');
+            } catch (error) {
+                showStatus('status3', '❌ Error: ' + error.message, true);
+            }
+        }
+
+        async function demo4() {
+            try {
+                showStatus('status4', 'Generating business report...');
+                
+                const html = `
+                <html>
+                <head>
+                    <style>
+                        body { font-family: 'Times New Roman', serif; margin: 40px; line-height: 1.6; }
+                        .header { text-align: center; margin-bottom: 40px; }
+                        .company-logo { font-size: 24px; font-weight: bold; color: #007bff; }
+                        .report-title { font-size: 20px; margin: 20px 0; }
+                        .section { margin: 30px 0; }
+                        .section h2 { color: #333; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                        th { background-color: #f8f9fa; font-weight: bold; }
+                        .footer { margin-top: 50px; text-align: center; color: #666; font-size: 12px; }
+                        .highlight { background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="company-logo">🏢 ACME Corporation</div>
+                        <div class="report-title">Quarterly Business Report</div>
+                        <p>Generated on ${new Date().toLocaleDateString()}</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>📈 Executive Summary</h2>
+                        <p>This quarter has shown remarkable growth across all key performance indicators. Our strategic initiatives have delivered substantial returns, positioning us strongly for the upcoming quarter.</p>
+                        
+                        <div class="highlight">
+                            <strong>Key Highlight:</strong> Revenue increased by 47% compared to last quarter, exceeding our projected targets by 12%.
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2>💰 Financial Performance</h2>
+                        <table>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Q3 2024</th>
+                                <th>Q4 2024</th>
+                                <th>Change</th>
+                            </tr>
+                            <tr>
+                                <td>Revenue</td>
+                                <td>$245,000</td>
+                                <td>$359,000</td>
+                                <td>+47%</td>
+                            </tr>
+                            <tr>
+                                <td>Profit</td>
+                                <td>$45,000</td>
+                                <td>$78,000</td>
+                                <td>+73%</td>
+                            </tr>
+                            <tr>
+                                <td>Operating Expenses</td>
+                                <td>$200,000</td>
+                                <td>$281,000</td>
+                                <td>+41%</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="section">
+                        <h2>🎯 Key Achievements</h2>
+                        <ul>
+                            <li>Launched new product line with 95% customer satisfaction</li>
+                            <li>Expanded to 3 new markets</li>
+                            <li>Increased team size by 25%</li>
+                            <li>Improved operational efficiency by 18%</li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <h2>🔮 Next Quarter Outlook</h2>
+                        <p>Based on current trends and market analysis, we project:</p>
+                        <ul>
+                            <li>15-20% revenue growth</li>
+                            <li>Launch of 2 additional product features</li>
+                            <li>Entry into international markets</li>
+                            <li>Implementation of new automation systems</li>
+                        </ul>
+                    </div>
+
+                    <div class="footer">
+                        <p>This report is confidential and proprietary to ACME Corporation</p>
+                        <p>Report ID: RPT-${Date.now()} | Page 1 of 1</p>
+                    </div>
+                </body>
+                </html>
+                `;
+                
+                await downloadPDF(html, 'business-report-q4-2024.pdf');
+                showStatus('status4', '✅ Business report downloaded successfully!');
+            } catch (error) {
+                showStatus('status4', '❌ Error: ' + error.message, true);
+            }
+        }
+
+        // Set today's date as default
+        document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>

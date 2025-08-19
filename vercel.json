@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/success.js": {
+      "maxDuration": 30
+    }
+  }
+}

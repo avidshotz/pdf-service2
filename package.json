@@ -1,0 +1,27 @@
+{
+  "name": "pdf-service2",
+  "version": "1.0.0",
+  "description": "Vercel Node.js Serverless Function for HTML to PDF conversion",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel"
+  },
+  "keywords": [
+    "vercel",
+    "serverless",
+    "pdf-service",
+    "html-to-pdf",
+    "puppeteer"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@vercel/node": "^3.0.0",
+    "puppeteer": "^24.16.2"
+  },
+  "dependencies": {
+    "@sparticuz/chromium": "^138.0.2",
+    "puppeteer-core": "^24.16.2"
+  }
+}

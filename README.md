@@ -47,7 +47,7 @@ npx vercel --token $VERCEL_TOKEN --prod --yes
 
 Your serverless function is available at:
 ```
-https://pdf-service2-mdl5f58oo-avidshotzs-projects.vercel.app/api/success
+https://pdf-service2-5xlwxkuud-avidshotzs-projects.vercel.app/api/success
 ```
 
 ### 1. Success Message (Backward Compatibility)
@@ -66,14 +66,14 @@ Without HTML parameter, returns:
 
 **GET Request with Query Parameter:**
 ```bash
-curl "https://pdf-service2-mdl5f58oo-avidshotzs-projects.vercel.app/api/success?html=<h1>Hello World</h1>" \
+curl "https://pdf-service2-5xlwxkuud-avidshotzs-projects.vercel.app/api/success?html=<h1>Hello World</h1>" \
   --output test.pdf
 ```
 
 **POST Request with HTML Body:**
 ```bash
 curl -X POST \
-  "https://pdf-service2-mdl5f58oo-avidshotzs-projects.vercel.app/api/success" \
+  "https://pdf-service2-5xlwxkuud-avidshotzs-projects.vercel.app/api/success" \
   -H "Content-Type: text/html" \
   -d "<html><body><h1>Hello PDF!</h1><p>This will be converted to PDF</p></body></html>" \
   --output output.pdf
@@ -82,7 +82,7 @@ curl -X POST \
 **POST Request with JSON:**
 ```bash
 curl -X POST \
-  "https://pdf-service2-mdl5f58oo-avidshotzs-projects.vercel.app/api/success" \
+  "https://pdf-service2-5xlwxkuud-avidshotzs-projects.vercel.app/api/success" \
   -H "Content-Type: application/json" \
   -d '{"html":"<html><body><h1>JSON to PDF</h1></body></html>"}' \
   --output json.pdf
@@ -93,7 +93,7 @@ curl -X POST \
 ```javascript
 // Convert HTML to PDF
 async function generatePDF(htmlContent) {
-  const response = await fetch('https://pdf-service2-mdl5f58oo-avidshotzs-projects.vercel.app/api/success', {
+  const response = await fetch('https://pdf-service2-5xlwxkuud-avidshotzs-projects.vercel.app/api/success', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

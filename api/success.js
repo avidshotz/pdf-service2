@@ -26,7 +26,9 @@ export default async function handler(req, res) {
           message: "Task successfully completed!",
           timestamp: new Date().toISOString(),
           status: "completed",
-          info: "Send HTML via 'html' query parameter or POST body to generate PDF"
+          info: "Send HTML via 'html' query parameter or POST body to generate PDF",
+          version: "FIXED-DECODE-URI-2024-08-20",
+          deploymentId: "ebtqd9pz1"
         });
       }
     } else if (req.method === 'POST') {
@@ -46,9 +48,14 @@ export default async function handler(req, res) {
       });
     }
 
-    // Decode URL-encoded HTML if needed
+    // Safely decode URL-encoded HTML if needed
     if (html.includes('%')) {
-      html = decodeURIComponent(html);
+      try {
+        html = decodeURIComponent(html);
+      } catch (error) {
+        console.log('DecodeURIComponent failed, using raw HTML content:', error.message);
+        // Continue with original HTML content - it's probably not URL-encoded
+      }
     }
 
     // Ensure HTML has proper structure

@@ -171,10 +171,18 @@
             <button onclick="demo4()">Generate Business Report</button>
             <div id="status4" class="status"></div>
         </div>
+
+        <!-- API Version Test -->
+        <div class="demo-section">
+            <h3>🔧 API Version Test</h3>
+            <p>Test which version of the API we're hitting:</p>
+            <button onclick="testAPIVersion()">Check API Version</button>
+            <div id="statusVersion" class="status"></div>
+        </div>
     </div>
 
     <script>
-        const PDF_SERVICE_URL = 'https://pdf-service2-hid27m3hm-avidshotzs-projects.vercel.app/api/success';
+        const PDF_SERVICE_URL = 'https://pdf-service2-5xlwxkuud-avidshotzs-projects.vercel.app/api/success';
 
         // Utility functions
         function showStatus(elementId, message, isError = false) {
@@ -398,6 +406,28 @@
                 showStatus('status4', '✅ Business report downloaded successfully!');
             } catch (error) {
                 showStatus('status4', '❌ Error: ' + error.message, true);
+            }
+        }
+
+        // API Version Test Function
+        async function testAPIVersion() {
+            try {
+                showStatus('statusVersion', 'Testing API version...');
+                
+                const response = await fetch(PDF_SERVICE_URL, {
+                    method: 'GET'  // GET without HTML returns version info
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                const versionInfo = `✅ API Version: ${data.version || 'unknown'} | Deployment: ${data.deploymentId || 'unknown'} | Time: ${data.timestamp}`;
+                showStatus('statusVersion', versionInfo);
+                
+            } catch (error) {
+                showStatus('statusVersion', `❌ Version check failed: ${error.message}`, true);
             }
         }
 
